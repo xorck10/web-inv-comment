@@ -18,19 +18,41 @@
         body.lock-scroll { overflow: hidden; height: 100vh; }
         #main-content { display: none; }
 
-        @keyframes particle-float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            25% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        /* Animasi Partikel Emas Bergerak Mewah & Bersinar */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) scale(0.5);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.9;
+            }
+            80% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
         }
         
         .gold-particle {
             position: fixed;
-            background-color: rgba(255, 215, 0, 0.15);
+            background: radial-gradient(circle, #fff7cc 0%, #ffd700 60%, #b8860b 100%);
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;
-            animation: particle-float linear infinite;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 15px rgba(255, 215, 0, 0.4);
+            animation: floatUp linear infinite;
+        }
+
+        /* Animasi Gelembung Chat Masuk */
+        @keyframes bubbleIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-bubble {
+            animation: bubbleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .text-gold { color: #d4af37; }
@@ -38,10 +60,10 @@
         .border-gold { border-color: #d4af37; }
         
         .glass {
-            background: rgba(20, 20, 20, 0.6);
+            background: rgba(20, 20, 20, 0.75);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.25);
         }
 
         #wishes-container {
@@ -142,23 +164,32 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         // GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU (/exec)
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw_64RFF_d55C3PO7e3q5nVWXLSqY9wGzaN6QDI8StHgOD_kLye-FUCPrZLNqZ8LL82/exec";
+        const WEB_APP_URL = "TEMPEL_URL_WEB_APP_EXEC_DISINI";
 
         document.addEventListener('DOMContentLoaded', () => {
             AOS.init({ once: true, offset: 50 });
 
-            // Generate Partikel Emas
+            // Generate Partikel Emas Bercahaya yang Lebih Hidup
             const particleContainer = document.getElementById('particle-container');
             if (particleContainer) {
-                for (let i = 0; i < 15; i++) {
+                for (let i = 0; i < 25; i++) {
                     const particle = document.createElement('div');
                     particle.classList.add('gold-particle');
-                    const size = Math.random() * 10 + 5; 
+                    
+                    // Ukuran bervariasi dari kecil hingga agak besar (4px - 10px)
+                    const size = Math.random() * 6 + 4; 
                     particle.style.width = `${size}px`; 
                     particle.style.height = `${size}px`;
+                    
+                    // Posisi acak secara horizontal
                     particle.style.left = `${Math.random() * 100}vw`;
-                    particle.style.animationDuration = `${Math.random() * 10 + 8}s`;
+                    
+                    // Durasi naik acak (4 - 9 detik) biar gerakannya bervariasi
+                    particle.style.animationDuration = `${Math.random() * 5 + 4}s`;
+                    
+                    // Jeda waktu mulai acak agar tidak keluar bersamaan
                     particle.style.animationDelay = `${Math.random() * 5}s`;
+                    
                     particleContainer.appendChild(particle);
                 }
             }
@@ -176,8 +207,7 @@
                 }
             }
 
-            // CEK OTOMATIS: Jika halaman direfresh setelah kirim komentar (mengandung #wishes-section), 
-            // maka langsung lewati cover dan buka undangannya secara instan!
+            // Cek otomatis jika di-refresh setelah kirim komentar
             if (window.location.hash === '#wishes-section') {
                 const cover = document.getElementById('cover');
                 const mainContent = document.getElementById('main-content');
@@ -186,7 +216,6 @@
                 mainContent.style.display = 'block';
                 document.body.classList.remove('lock-scroll');
                 
-                // Geser pas ke arah bagian komentar
                 setTimeout(() => {
                     const target = document.getElementById('wishes-section');
                     if (target) {
@@ -231,11 +260,11 @@
                         return;
                     }
 
-                    wishes.forEach(wish => {
+                    wishes.forEach((wish, index) => {
                         const wishEl = document.createElement('div');
-                        wishEl.classList.add('glass', 'p-6', 'rounded-2xl', 'border', 'border-gold/10');
+                        wishEl.classList.add('glass', 'p-6', 'rounded-2xl', 'border', 'border-gold/10', 'animate-bubble');
+                        wishEl.style.animationDelay = `${index * 0.08}s`; 
                         
-                        // PERBAIKAN FORMAT TANGGAL: Mengubah format acak ISO menjadi format waktu yang bersih & ramah dibaca
                         let formattedDate = wish.waktu;
                         if (wish.waktu) {
                             try {
@@ -277,7 +306,7 @@
                 submitBtn.textContent = "Mengirim...";
 
                 const formData = {
-                    "nama": nameNameClean = nameInput.value.trim(),
+                    "nama": nameInput.value.trim(),
                     "pesan": messageInput.value.trim()
                 };
 
@@ -290,7 +319,6 @@
                 })
                 .then(() => {
                     setTimeout(() => {
-                        // Refresh halaman dengan hash #wishes-section agar otomatis melewati cover
                         window.location.href = window.location.pathname + window.location.search + '#wishes-section';
                         window.location.reload();
                     }, 1500);
@@ -313,3 +341,4 @@
     </script>
 </body>
 </html>
+
