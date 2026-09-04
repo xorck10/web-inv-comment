@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wedding of Rian & Sinta</title>
+    <title>The Wedding of Rian & Sinta</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -15,7 +15,7 @@
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-sans { font-family: 'Poppins', sans-serif; }
 
-        body.lock-scroll { overflow: hidden; height: 100%; }
+        body.lock-scroll { overflow: hidden; height: 100vh; }
         #main-content { display: none; }
 
         @keyframes particle-float {
@@ -66,7 +66,7 @@
                 <h2 id="guest-name" class="text-2xl md:text-3xl font-serif text-white font-semibold py-2 break-words">Tamu Undangan</h2>
             </div>
             <button onclick="openInvitation()" class="group bg-gold text-black font-semibold px-10 py-4 rounded-full text-sm uppercase tracking-wider shadow-lg shadow-gold/20 hover:bg-white hover:text-black transform hover:scale-105 transition-all duration-300 ease-out cursor-pointer">
-                💌 Buka Undangan p
+                💌 Buka Undangan
             </button>
         </div>
         <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
@@ -140,6 +140,142 @@
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU (/exec)
+        const WEB_APP_URL = "TEMPEL_URL_WEB_APP_EXEC_DISINI";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({ once: true, offset: 50 });
+
+            // Generate Partikel Emas
+            const particleContainer = document.getElementById('particle-container');
+            if (particleContainer) {
+                for (let i = 0; i < 15; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('gold-particle');
+                    const size = Math.random() * 10 + 5; 
+                    particle.style.width = `${size}px`; 
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${Math.random() * 100}vw`;
+                    particle.style.animationDuration = `${Math.random() * 10 + 8}s`;
+                    particle.style.animationDelay = `${Math.random() * 5}s`;
+                    particleContainer.appendChild(particle);
+                }
+            }
+
+            // Ambil Nama Tamu dari URL (?to=Nama+Tamu)
+            const urlParams = new URLSearchParams(window.location.search);
+            const guestParam = urlParams.get('to') || urlParams.get('nama');
+            const guestElement = document.getElementById('guest-name');
+            
+            if (guestElement) {
+                if (guestParam) {
+                    guestElement.textContent = decodeURIComponent(guestParam.replace(/\+/g, ' '));
+                } else {
+                    guestElement.textContent = "Tamu Undangan";
+                }
+            }
+
+            loadWishesFromSheet();
+        });
+
+        function openInvitation() {
+            const cover = document.getElementById('cover');
+            const mainContent = document.getElementById('main-content');
+            const body = document.body;
+            
+            window.scrollTo(0, 0);
+            cover.classList.add('opacity-0');
+            body.classList.remove('lock-scroll');
+            
+            setTimeout(() => {
+                cover.style.display = 'none';
+                mainContent.style.display = 'block';
+                AOS.refresh(); 
+            }, 1000);
+        }
+
+        function loadWishesFromSheet() {
+            const container = document.getElementById('wishes-container');
+            if (!container) return;
+
+            container.innerHTML = '<p class="text-center text-gold animate-pulse text-sm">Memuat doa restu...</p>';
+
+            fetch(WEB_APP_URL)
+                .then(response => response.json())
+                .then(result => {
+                    container.innerHTML = '';
+                    const wishes = result.data; 
+
+                    if (!wishes || wishes.length === 0) {
+                        container.innerHTML = '<p class="text-center text-stone-500 text-sm">Belum ada ucapan. Jadilah yang pertama!</p>';
+                        return;
+                    }
+
+                    wishes.forEach(wish => {
+                        const wishEl = document.createElement('div');
+                        wishEl.classList.add('glass', 'p-6', 'rounded-2xl', 'border', 'border-gold/10');
+                        wishEl.innerHTML = `
+                            <div class="flex justify-between items-baseline mb-3">
+                                <h4 class="font-semibold text-gold text-sm md:text-base">${escapeHTML(wish.nama)}</h4>
+                                <span class="text-xs text-stone-500">${escapeHTML(wish.waktu)}</span>
+                            </div>
+                            <p class="text-stone-300 text-sm leading-relaxed">${escapeHTML(wish.pesan)}</p>
+                        `;
+                        container.appendChild(wishEl);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    container.innerHTML = '<p class="text-center text-red-500 text-sm">Gagal memuat ucapan.</p>';
+                });
+        }
+
+        const form = document.getElementById('wish-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const nameInput = document.getElementById('sender-name');
+                const messageInput = document.getElementById('sender-message');
+                const submitBtn = form.querySelector('button');
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Mengirim...";
+
+                const formData = {
+                    "nama": nameInput.value.trim(),
+                    "pesan": messageInput.value.trim()
+                };
+
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                .then(() => {
+                    setTimeout(() => {
+                        window.location.href = window.location.pathname + window.location.search + '#wishes-section';
+                        window.location.reload();
+                    }, 1500);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert("Gagal mengirim ucapan.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Kirim Ucapan";
+                });
+            });
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
 </body>
 </html>
