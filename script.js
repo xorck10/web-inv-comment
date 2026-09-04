@@ -1,5 +1,5 @@
 // GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU SENDIRI
-const WEB_APP_URL = "TEMPEL_URL_WEB_APP_EXEC_DISINI";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw_64RFF_d55C3PO7e3q5nVWXLSqY9wGzaN6QDI8StHgOD_kLye-FUCPrZLNqZ8LL82/exec";
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Inisialisasi AOS Animation
