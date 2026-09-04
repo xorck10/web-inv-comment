@@ -176,6 +176,25 @@
                 }
             }
 
+            // CEK OTOMATIS: Jika halaman direfresh setelah kirim komentar (mengandung #wishes-section), 
+            // maka langsung lewati cover dan buka undangannya secara instan!
+            if (window.location.hash === '#wishes-section') {
+                const cover = document.getElementById('cover');
+                const mainContent = document.getElementById('main-content');
+                
+                cover.style.display = 'none';
+                mainContent.style.display = 'block';
+                document.body.classList.remove('lock-scroll');
+                
+                // Geser pas ke arah bagian komentar
+                setTimeout(() => {
+                    const target = document.getElementById('wishes-section');
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 100);
+            }
+
             loadWishesFromSheet();
         });
 
@@ -215,10 +234,24 @@
                     wishes.forEach(wish => {
                         const wishEl = document.createElement('div');
                         wishEl.classList.add('glass', 'p-6', 'rounded-2xl', 'border', 'border-gold/10');
+                        
+                        // PERBAIKAN FORMAT TANGGAL: Mengubah format acak ISO menjadi format waktu yang bersih & ramah dibaca
+                        let formattedDate = wish.waktu;
+                        if (wish.waktu) {
+                            try {
+                                const d = new Date(wish.waktu);
+                                if (!isNaN(d.getTime())) {
+                                    formattedDate = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' }) + ' • ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                                }
+                            } catch (e) {
+                                formattedDate = wish.waktu;
+                            }
+                        }
+
                         wishEl.innerHTML = `
                             <div class="flex justify-between items-baseline mb-3">
                                 <h4 class="font-semibold text-gold text-sm md:text-base">${escapeHTML(wish.nama)}</h4>
-                                <span class="text-xs text-stone-500">${escapeHTML(wish.waktu)}</span>
+                                <span class="text-xs text-stone-500">${escapeHTML(formattedDate)}</span>
                             </div>
                             <p class="text-stone-300 text-sm leading-relaxed">${escapeHTML(wish.pesan)}</p>
                         `;
@@ -244,7 +277,7 @@
                 submitBtn.textContent = "Mengirim...";
 
                 const formData = {
-                    "nama": nameInput.value.trim(),
+                    "nama": nameNameClean = nameInput.value.trim(),
                     "pesan": messageInput.value.trim()
                 };
 
@@ -257,6 +290,7 @@
                 })
                 .then(() => {
                     setTimeout(() => {
+                        // Refresh halaman dengan hash #wishes-section agar otomatis melewati cover
                         window.location.href = window.location.pathname + window.location.search + '#wishes-section';
                         window.location.reload();
                     }, 1500);
