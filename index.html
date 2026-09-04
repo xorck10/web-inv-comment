@@ -6,21 +6,54 @@
     <title>The Wedding of Rian & Sinta</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+        
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Poppins', sans-serif; }
+
+        body.lock-scroll { overflow: hidden; height: 100%; }
+        #main-content { display: none; }
+
+        @keyframes particle-float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            25% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+        
+        .gold-particle {
+            position: fixed;
+            background-color: rgba(255, 215, 0, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            animation: particle-float linear infinite;
+        }
+
+        .text-gold { color: #d4af37; }
+        .bg-gold { background-color: #d4af37; }
+        .border-gold { border-color: #d4af37; }
+        
+        .glass {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        #wishes-container {
+            scrollbar-width: thin;
+            scrollbar-color: #d4af37 #1a1a1a;
+        }
+        #wishes-container::-webkit-scrollbar { width: 6px; }
+        #wishes-container::-webkit-scrollbar-track { background: #1a1a1a; }
+        #wishes-container::-webkit-scrollbar-thumb { background-color: #d4af37; border-radius: 10px; }
+    </style>
 </head>
 <body class="bg-black text-stone-200 font-sans antialiased lock-scroll">
-
-    <audio id="wedding-song" loop>
-        <source src="nothing-gonna.mp3" type="audio/mpeg">
-        Browser Anda tidak mendukung pemutar audio.
-    </audio>
-
-    <button id="music-control" onclick="toggleMusic()" class="fixed bottom-6 right-6 z-40 hidden bg-stone-900/80 border border-gold/40 text-gold p-3 rounded-full shadow-lg backdrop-blur-md hover:scale-110 transition-all duration-300">
-        <svg id="music-icon" class="w-6 h-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-        </svg>
-    </button>
 
     <div id="particle-container"></div>
 
@@ -28,70 +61,79 @@
         <div data-aos="zoom-in" data-aos-duration="1500" class="relative z-10 w-full max-w-md">
             <p class="text-xs tracking-[0.3em] text-gold uppercase mb-4 font-medium">The Wedding Of</p>
             <h1 class="text-6xl md:text-7xl font-serif text-gold mb-6 drop-shadow-lg">Rian & Sinta</h1>
-            
             <div class="glass rounded-3xl p-8 mb-10 shadow-2xl border border-gold/30">
                 <p class="text-xs text-stone-400 uppercase tracking-widest mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-                <h2 id="guest-name" class="text-2xl md:text-3xl font-serif text-white font-semibold py-2 break-words">
-                    Tamu Undangan
-                </h2>
+                <h2 id="guest-name" class="text-2xl md:text-3xl font-serif text-white font-semibold py-2 break-words">Tamu Undangan</h2>
             </div>
-
-            <button onclick="openInvitation()" class="group bg-gold text-black font-semibold px-10 py-4 rounded-full text-sm uppercase tracking-wider shadow-lg shadow-gold/20 hover:bg-white hover:text-black transform hover:scale-105 transition-all duration-300 ease-out cursor-pointer">
+            <button onclick="openInvitation()" class="group bg-gold text-black font-semibold px-10 py-4 rounded-full text-sm uppercase tracking-wider shadow-lg shadow-gold/20 hover:bg-white hover:text-black transform hover:scale-105 transition-all duration-300 ease-out">
                 💌 Buka Undangan
             </button>
-            
-            <p class="text-xs text-stone-600 mt-12">Mohon maaf apabila ada kesalahan penulisan nama/gelar.</p>
         </div>
-        
         <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
     </div>
 
     <div id="main-content">
+        
         <section class="min-h-screen flex flex-col items-center justify-center text-center p-6 relative bg-stone-950">
             <div data-aos="fade-up" data-aos-duration="1000" class="relative z-10 max-w-3xl">
                 <span class="text-xs uppercase tracking-[0.4em] text-gold font-medium block mb-6">Kami Yang Berbahagia</span>
                 <h1 class="text-5xl md:text-7xl font-serif text-gold leading-tight">Rian Arinata</h1>
                 <span class="text-3xl font-serif text-gold block my-4">&</span>
                 <h1 class="text-5xl md:text-7xl font-serif text-gold leading-tight">Sinta Lestari</h1>
-                
-                <div class="w-24 h-px bg-gold mx-auto my-10"></div>
-                
-                <p class="max-w-xl mx-auto text-stone-400 text-base italic font-light px-4 leading-relaxed font-serif">
-                    "Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri..."
-                </p>
-                <p class="text-sm text-stone-500 mt-4">(QS. Ar-Rum: 21)</p>
             </div>
-            <div class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1529639054893-a47c836e7a0a?q=80')] bg-cover bg-center"></div>
         </section>
 
         <section class="py-24 px-6 bg-black">
-            <div data-aos="fade-up" data-aos-duration="1000" class="text-center max-w-3xl mx-auto mb-20">
-                <h2 class="text-base uppercase tracking-[0.3em] text-gold font-medium mb-4">Save The Date</h2>
+            <div data-aos="fade-up" class="text-center max-w-3xl mx-auto mb-20">
                 <p class="text-4xl md:text-5xl font-serif text-white leading-snug">Rangkaian Acara Bahagia</p>
             </div>
-
             <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
-                <div data-aos="fade-right" data-aos-duration="1200" class="glass p-10 rounded-3xl border border-gold/20 shadow-xl text-center">
+                <div data-aos="fade-right" class="glass p-10 rounded-3xl border border-gold/20 text-center">
                     <h3 class="text-3xl font-serif text-gold mb-6">Akad Nikah</h3>
-                    <p class="text-xl text-white font-medium mb-3">Minggu, 12 Juli 2026</p>
-                    <p class="text-base text-stone-300 mb-6">Pukul 08.00 WIB - Selesai</p>
-                    <p class="text-sm text-stone-400 mb-10 leading-relaxed bg-stone-900/50 p-4 rounded-xl border border-stone-800">
-                        Masjid Agung Baiturrahman, Kota Batu
-                    </p>
+                    <p class="text-sm text-stone-400 mb-10 leading-relaxed bg-stone-900/50 p-4 rounded-xl border border-stone-800">Masjid Agung Baiturrahman, Kota Batu</p>
                 </div>
-
-                <div data-aos="fade-left" data-aos-duration="1200" class="glass p-10 rounded-3xl border border-gold/20 shadow-xl text-center">
+                <div data-aos="fade-left" class="glass p-10 rounded-3xl border border-gold/20 text-center">
                     <h3 class="text-3xl font-serif text-gold mb-6">Resepsi</h3>
-                    <p class="text-xl text-white font-medium mb-3">Minggu, 12 Juli 2026</p>
-                    <p class="text-base text-stone-300 mb-6">Pukul 11.00 - 13.00 WIB</p>
-                    <p class="text-sm text-stone-400 mb-10 leading-relaxed bg-stone-900/50 p-4 rounded-xl border border-stone-800">
-                        Ballroom Hotel Royal Senyum, Kota Batu
-                    </p>
+                    <p class="text-sm text-stone-400 mb-10 leading-relaxed bg-stone-900/50 p-4 rounded-xl border border-stone-800">Ballroom Hotel Royal Senyum, Kota Batu</p>
                 </div>
             </div>
         </section>
 
-        <footer class="py-16 text-center border-t border-stone-800 bg-stone-950 px-4">
+        <section id="wishes-section" class="py-24 px-6 bg-stone-950">
+            <div class="max-w-4xl mx-auto">
+                <div data-aos="fade-up" class="text-center mb-16">
+                    <h2 class="text-base uppercase tracking-[0.3em] text-gold font-medium mb-4">Ucapan & Doa Restu</h2>
+                    <p class="text-3xl md:text-4xl font-serif text-white">Berikan Gelembung Ucapan</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-10 items-start">
+                    <div data-aos="fade-right" class="glass p-8 rounded-3xl border border-gold/20 sticky top-10">
+                        <form id="wish-form" class="space-y-6">
+                            <div>
+                                <label class="text-sm text-stone-300 block mb-2">Nama Anda</label>
+                                <input type="text" id="sender-name" required placeholder="Tulis nama Anda..." 
+                                       class="w-full bg-black border border-stone-700 rounded-xl p-4 text-white placeholder:text-stone-600 focus:border-gold outline-none transition">
+                            </div>
+                            <div>
+                                <label class="text-sm text-stone-300 block mb-2">Ucapan / Doa</label>
+                                <textarea id="sender-message" required rows="4" placeholder="Tulis doa terbaik..."
+                                          class="w-full bg-black border border-stone-700 rounded-xl p-4 text-white placeholder:text-stone-600 focus:border-gold outline-none transition resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-gold text-black font-semibold px-8 py-4 rounded-xl text-sm uppercase tracking-wider hover:bg-white transition flex items-center justify-center gap-2">
+                                Kirim Ucapan
+                            </button>
+                        </form>
+                    </div>
+
+                    <div data-aos="fade-left" class="md:col-span-2 h-[500px] flex flex-col">
+                        <div id="wishes-container" class="flex-1 pr-4 space-y-6 overflow-y-auto">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-16 text-center border-t border-stone-800 bg-black px-4">
             <h4 class="font-serif text-3xl text-gold mb-4">Rian & Sinta</h4>
             <p class="text-stone-600 text-sm">Terima kasih atas doa restu Bapak/Ibu/Saudara/i sekalian.</p>
         </footer>
