@@ -1,3 +1,6 @@
+// GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU SENDIRI
+const WEB_APP_URL = "TEMPEL_URL_WEB_APP_EXEC_DISINI";
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Inisialisasi AOS Animation
     AOS.init({ once: true, offset: 50 });
@@ -31,11 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Load ucapan awal saat halaman pertama kali dibuka
-    loadWishes();
+    // 4. Muat ucapan dari Google Sheets saat halaman dimuat
+    loadWishesFromSheet();
 });
 
-// 4. Fungsi Transisi Buka Undangan
+// Fungsi Transisi Buka Undangan
 function openInvitation() {
     const cover = document.getElementById('cover');
     const mainContent = document.getElementById('main-content');
@@ -48,53 +51,48 @@ function openInvitation() {
     setTimeout(() => {
         cover.style.display = 'none';
         mainContent.style.display = 'block';
-        AOS.refresh(); // Refresh animasi scroll setelah konten muncul
+        AOS.refresh(); 
     }, 1000);
 }
 
-// 5. Logika Gelembung Ucapan Kolektif (LocalStorage)
-const STORAGE_KEY = 'wedding_wishes_rian_sinta';
-
-// Fungsi untuk menampilkan ucapan ke layar
-function loadWishes() {
+// Ambil Data dari Google Sheets
+function loadWishesFromSheet() {
     const container = document.getElementById('wishes-container');
     if (!container) return;
 
-    let wishes = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    
-    if (!wishes) {
-        wishes = [
-            {
-                name: "Keluarga Besar Bp. Andi",
-                message: "Selamat berbahagia Rian & Sinta! Semoga menjadi keluarga sakinah, mawaddah, warahmah. Lancar acaranya ya!",
-                time: "Baru saja"
-            },
-            {
-                name: "Sahabat Kuliah",
-                message: "Waduh, akhirnya sold out juga nih bestie! Ikut seneng banget. Happy Wedding!",
-                time: "2 menit lalu"
-            }
-        ];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(wishes));
-    }
+    container.innerHTML = '<p class="text-center text-gold animate-pulse text-sm">Memuat doa restu...</p>';
 
-    container.innerHTML = '';
-    
-    wishes.slice().reverse().forEach(wish => {
-        const wishEl = document.createElement('div');
-        wishEl.classList.add('glass', 'p-6', 'rounded-2xl', 'border', 'border-gold/10');
-        wishEl.innerHTML = `
-            <div class="flex justify-between items-baseline mb-3">
-                <h4 class="font-semibold text-gold text-sm md:text-base">${escapeHTML(wish.name)}</h4>
-                <span class="text-xs text-stone-500">${escapeHTML(wish.time)}</span>
-            </div>
-            <p class="text-stone-300 text-sm leading-relaxed">${escapeHTML(wish.message)}</p>
-        `;
-        container.appendChild(wishEl);
-    });
+    fetch(WEB_APP_URL)
+        .then(response => response.json())
+        .then(result => {
+            container.innerHTML = '';
+            const wishes = result.data; 
+
+            if (!wishes || wishes.length === 0) {
+                container.innerHTML = '<p class="text-center text-stone-500 text-sm">Belum ada ucapan. Jadilah yang pertama!</p>';
+                return;
+            }
+
+            wishes.forEach(wish => {
+                const wishEl = document.createElement('div');
+                wishEl.classList.add('glass', 'p-6', 'rounded-2xl', 'border', 'border-gold/10');
+                wishEl.innerHTML = `
+                    <div class="flex justify-between items-baseline mb-3">
+                        <h4 class="font-semibold text-gold text-sm md:text-base">${escapeHTML(wish.nama)}</h4>
+                        <span class="text-xs text-stone-500">${escapeHTML(wish.waktu)}</span>
+                    </div>
+                    <p class="text-stone-300 text-sm leading-relaxed">${escapeHTML(wish.pesan)}</p>
+                `;
+                container.appendChild(wishEl);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            container.innerHTML = '<p class="text-center text-red-500 text-sm">Gagal memuat ucapan.</p>';
+        });
 }
 
-// Event listener saat form ucapan dikirim
+// Kirim Data ke Google Sheets dan Refresh ke #wishes-section
 const form = document.getElementById('wish-form');
 if (form) {
     form.addEventListener('submit', function(e) {
@@ -102,28 +100,45 @@ if (form) {
         
         const nameInput = document.getElementById('sender-name');
         const messageInput = document.getElementById('sender-message');
-        
-        const newWish = {
-            name: nameInput.value.trim(),
-            message: messageInput.value.trim(),
-            time: "Baru saja"
+        const submitBtn = form.querySelector('button');
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Mengirim...";
+
+        const formData = {
+            "nama": nameInput.value.trim(),
+            "pesan": messageInput.value.trim()
         };
 
-        let wishes = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-        wishes.push(newWish);
-        
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(wishes));
-        
-        nameInput.value = '';
-        messageInput.value = '';
-        loadWishes();
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(() => {
+            setTimeout(() => {
+                // Refresh halaman dan langsung melompat ke elemen #wishes-section
+                window.location.href = window.location.pathname + window.location.search + '#wishes-section';
+                window.location.reload();
+            }, 1500);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert("Gagal mengirim ucapan.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Kirim Ucapan";
+        });
     });
 }
 
-// Fungsi Keamanan Sederhana Mencegah XSS Injection
+// Fungsi Keamanan Mencegah XSS Injection
 function escapeHTML(str) {
+    if (!str) return '';
     return str.replace(/[&<>'"]/g, 
         tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
     );
 }
-
