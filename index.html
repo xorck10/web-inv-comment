@@ -6,34 +6,24 @@
     <title>The Wedding of Rian & Sinta</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap');
         
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-sans { font-family: 'Poppins', sans-serif; }
+        .font-latin { font-family: 'Great Vibes', cursive; }
 
         body.lock-scroll { overflow: hidden; height: 100vh; }
         #main-content { display: none; }
 
         /* Animasi Partikel Emas Bergerak Mewah & Bersinar */
         @keyframes floatUp {
-            0% {
-                transform: translateY(105vh) scale(0.5);
-                opacity: 0;
-            }
-            20% {
-                opacity: 0.9;
-            }
-            80% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1.2);
-                opacity: 0;
-            }
+            0% { transform: translateY(105vh) scale(0.5); opacity: 0; }
+            20% { opacity: 0.9; }
+            80% { opacity: 0.9; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
         
         .gold-particle {
@@ -73,6 +63,17 @@
         #wishes-container::-webkit-scrollbar { width: 6px; }
         #wishes-container::-webkit-scrollbar-track { background: #1a1a1a; }
         #wishes-container::-webkit-scrollbar-thumb { background-color: #d4af37; border-radius: 10px; }
+
+        /* Galeri Fade Transition */
+        .gallery-slide {
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            position: absolute;
+            inset: 0;
+        }
+        .gallery-slide.active {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-black text-stone-200 font-sans antialiased lock-scroll">
@@ -82,7 +83,7 @@
     <div id="cover" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center text-center p-6 transition-opacity duration-1000 ease-in-out">
         <div data-aos="zoom-in" data-aos-duration="1500" class="relative z-10 w-full max-w-md">
             <p class="text-xs tracking-[0.3em] text-gold uppercase mb-4 font-medium">The Wedding Of</p>
-            <h1 class="text-6xl md:text-7xl font-serif text-gold mb-6 drop-shadow-lg">Rian & Sinta</h1>
+            <h1 class="text-6xl md:text-7xl font-latin text-gold mb-6 drop-shadow-lg">Rian & Sinta</h1>
             <div class="glass rounded-3xl p-8 mb-10 shadow-2xl border border-gold/30">
                 <p class="text-xs text-stone-400 uppercase tracking-widest mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
                 <h2 id="guest-name" class="text-2xl md:text-3xl font-serif text-white font-semibold py-2 break-words">Tamu Undangan</h2>
@@ -100,11 +101,54 @@
             <div data-aos="fade-up" data-aos-duration="1000" class="relative z-10 max-w-3xl">
                 <span class="text-xs uppercase tracking-[0.4em] text-gold font-medium block mb-6">Kami Yang Berbahagia</span>
                 <h1 class="text-5xl md:text-7xl font-serif text-gold leading-tight">Rian Arinata</h1>
-                <span class="text-3xl font-serif text-gold block my-4">&</span>
+                <span class="text-4xl font-latin text-gold block my-3">&</span>
                 <h1 class="text-5xl md:text-7xl font-serif text-gold leading-tight">Sinta Lestari</h1>
-                <p class="font-serif text-gold leading-tight">Kamis, 10 Oktober 2010</p>
+                <p class="font-latin text-3xl text-gold mt-6 tracking-wide">Kamis, 10 Oktober 2010</p>
             </div>
-            <center><a href="#acara"><img src="scroll-down.gif" alt="Ikon Animasi" width="50px"></a></center>
+            <center class="absolute bottom-8"><a href="#acara"><img src="scroll-down.gif" alt="Ikon Animasi" width="40px" class="opacity-70 hover:opacity-100 transition"></a></center>
+        </section>
+
+        <section class="py-24 px-6 bg-black relative overflow-hidden">
+            <div data-aos="fade-up" class="text-center max-w-3xl mx-auto mb-14">
+                <span class="text-xs uppercase tracking-[0.3em] text-gold font-medium block mb-3">Our Moments</span>
+                <h2 class="text-4xl md:text-5xl font-serif text-white">Galeri Bahagia</h2>
+            </div>
+            <div class="max-w-xl mx-auto relative h-[450px] md:h-[550px] rounded-3xl overflow-hidden glass border border-gold/30 shadow-2xl" data-aos="zoom-in" data-aos-duration="1200">
+                <div class="gallery-slide active flex items-center justify-center">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000" alt="Prewedding 1" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-slide flex items-center justify-center">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000" alt="Prewedding 2" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-slide flex items-center justify-center">
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000" alt="Prewedding 3" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 px-6 bg-stone-950">
+            <div data-aos="fade-up" class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-[0.3em] text-gold font-medium block mb-3">Mempelai Pria & Wanita</span>
+                <h2 class="text-4xl md:text-5xl font-serif text-white">Menuju Ikatan Suci</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto items-center">
+                <div data-aos="fade-right" class="glass p-8 rounded-3xl border border-gold/20 text-center shadow-xl">
+                    <div class="w-44 h-44 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gold/50 shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600" alt="Rian Arinata" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-3xl font-serif text-gold mb-2">Rian Arinata, S.Pd.</h3>
+                    <p class="text-sm text-stone-400 mb-4">Putra tercinta dari<br>Bapak Budi Arinata & Ibu Siti Aminah</p>
+                </div>
+
+                <div data-aos="fade-left" class="glass p-8 rounded-3xl border border-gold/20 text-center shadow-xl">
+                    <div class="w-44 h-44 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gold/50 shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600" alt="Sinta Lestari" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-3xl font-serif text-gold mb-2">Sinta Lestari, M.Pd.</h3>
+                    <p class="text-sm text-stone-400 mb-4">Putri tercinta dari<br>Bapak Bambang Lestari & Ibu Sri Wahyuni</p>
+                </div>
+            </div>
         </section>
 
         <section class="py-24 px-6 bg-black">
@@ -115,17 +159,51 @@
                 <div data-aos="fade-right" class="glass p-10 rounded-3xl border border-gold/20 text-center">
                     <h3 class="text-3xl font-serif text-gold mb-6">Akad Nikah</h3>
                     <p class="text-sm text-stone-400 mb-10 leading-relaxed bg-stone-900/50 p-4 rounded-xl border border-stone-800">Masjid Agung Baiturrahman, Kota Batu</p>
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5846.106513243384!2d112.52354503754837!3d-7.871077808679783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7881f643c528c7%3A0x8035507c4dcb5100!2sMasjid%20Agung%20An-Nuur%20Kota%20Batu!5e0!3m2!1sid!2sid!4v1788581410463!5m2!1sid!2sid" width="100%" style="border:0; border-radius:10px;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5846.106513243384!2d112.52354503754837!3d-7.871077808679783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7881f643c528c7%3A0x8035507c4dcb5100!2sMasjid%20Agung%20An-Nuur%20Kota%20Batu!5e0!3m2!1sid!2sid!4v1788581410463!5m2!1sid!2sid" width="100%" height="250" style="border:0; border-radius:10px;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                 </div>
                 <div data-aos="fade-left" class="glass p-10 rounded-3xl border border-gold/20 text-center">
                     <h3 class="text-3xl font-serif text-gold mb-6">Resepsi</h3>
                     <p class="text-sm text-stone-400 mb-10 leading-relaxed bg-stone-900/50 p-4 rounded-xl border border-stone-800">Ballroom Hotel Royal Senyum, Kota Batu</p>
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3951.9860866858276!2d112.5501668737275!3d-7.896521678563153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7881c9d4250f01%3A0xcdebcd2e27a6cd08!2sSenyum%20World%20Hotel!5e0!3m2!1sid!2sid!4v1788581465395!5m2!1sid!2sid" width="100%" style="border:0; border-radius:10px;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3951.9860866858276!2d112.5501668737275!3d-7.896521678563153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7881c9d4250f01%3A0xcdebcd2e27a6cd08!2sSenyum%20World%20Hotel!5e0!3m2!1sid!2sid!4v1788581465395!5m2!1sid!2sid" width="100%" height="250" style="border:0; border-radius:10px;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                 </div>
             </div>
         </section>
 
-        <section id="wishes-section" class="py-24 px-6 bg-stone-950">
+        <section class="py-24 px-6 bg-stone-950">
+            <div data-aos="fade-up" class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-[0.3em] text-gold font-medium block mb-3">Tanda Kasih</span>
+                <h2 class="text-4xl md:text-5xl font-serif text-white">Wedding Gift</h2>
+                <p class="text-stone-400 text-sm mt-4">Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda ingin memberikan tanda kasih, dapat melalui:</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                <div data-aos="fade-right" class="glass p-8 rounded-3xl border border-gold/20 text-center shadow-xl relative overflow-hidden">
+                    <div class="text-2xl font-bold font-serif text-white mb-2 tracking-wider">BCA</div>
+                    <p class="text-sm text-stone-400 mb-4">No. Rekening</p>
+                    <div class="bg-black/60 border border-gold/30 py-3 px-4 rounded-xl text-lg font-mono text-gold tracking-widest mb-6 select-all" id="rekening-bca">
+                        1234567890
+                    </div>
+                    <p class="text-xs text-stone-300 mb-6">a.n. Rian Arinata</p>
+                    <button onclick="copyToClipboard('1234567890', this)" class="bg-gold text-black text-xs font-semibold px-6 py-2.5 rounded-full uppercase tracking-wider hover:bg-white transition cursor-pointer">
+                        📋 Salin No. Rekening
+                    </button>
+                </div>
+
+                <div data-aos="fade-left" class="glass p-8 rounded-3xl border border-gold/20 text-center shadow-xl relative overflow-hidden">
+                    <div class="text-2xl font-bold font-serif text-white mb-2 tracking-wider">MANDIRI</div>
+                    <p class="text-sm text-stone-400 mb-4">No. Rekening</p>
+                    <div class="bg-black/60 border border-gold/30 py-3 px-4 rounded-xl text-lg font-mono text-gold tracking-widest mb-6 select-all" id="rekening-mandiri">
+                        0987654321
+                    </div>
+                    <p class="text-xs text-stone-300 mb-6">a.n. Sinta Lestari</p>
+                    <button onclick="copyToClipboard('0987654321', this)" class="bg-gold text-black text-xs font-semibold px-6 py-2.5 rounded-full uppercase tracking-wider hover:bg-white transition cursor-pointer">
+                        📋 Salin No. Rekening
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="wishes-section" class="py-24 px-6 bg-black">
             <div class="max-w-4xl mx-auto">
                 <div data-aos="fade-up" class="text-center mb-16">
                     <h2 class="text-base uppercase tracking-[0.3em] text-gold font-medium mb-4">Ucapan & Doa Restu</h2>
@@ -153,49 +231,50 @@
 
                     <div data-aos="fade-left" class="md:col-span-2 h-[500px] flex flex-col">
                         <div id="wishes-container" class="flex-1 pr-4 space-y-6 overflow-y-auto">
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <footer class="py-16 text-center border-t border-stone-800 bg-black px-4">
-            <h4 class="font-serif text-3xl text-gold mb-4">Rian & Sinta</h4>
-            <p class="text-stone-600 text-sm">Terima kasih atas doa restu Bapak/Ibu/Saudara/i sekalian.</p>
+        <footer class="py-16 text-center border-t border-stone-800 bg-stone-950 px-4">
+            <h4 class="font-latin text-4xl text-gold mb-3">Rian & Sinta</h4>
+            <p class="text-stone-500 text-sm">Terima kasih atas doa restu Bapak/Ibu/Saudara/i sekalian.</p>
         </footer>
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU (/exec)
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw_64RFF_d55C3PO7e3q5nVWXLSqY9wGzaN6QDI8StHgOD_kLye-FUCPrZLNqZ8LL82/exec";
 
         document.addEventListener('DOMContentLoaded', () => {
             AOS.init({ once: true, offset: 50 });
 
-            // Generate Partikel Emas Bercahaya yang Lebih Hidup
+            // Generate Partikel Emas
             const particleContainer = document.getElementById('particle-container');
             if (particleContainer) {
                 for (let i = 0; i < 25; i++) {
                     const particle = document.createElement('div');
                     particle.classList.add('gold-particle');
-                    
-                    // Ukuran bervariasi dari kecil hingga agak besar (4px - 10px)
                     const size = Math.random() * 6 + 4; 
                     particle.style.width = `${size}px`; 
                     particle.style.height = `${size}px`;
-                    
-                    // Posisi acak secara horizontal
                     particle.style.left = `${Math.random() * 100}vw`;
-                    
-                    // Durasi naik acak (4 - 9 detik) biar gerakannya bervariasi
                     particle.style.animationDuration = `${Math.random() * 5 + 4}s`;
-                    
-                    // Jeda waktu mulai acak agar tidak keluar bersamaan
                     particle.style.animationDelay = `${Math.random() * 5}s`;
-                    
                     particleContainer.appendChild(particle);
                 }
+            }
+
+            // Slider Galeri Foto Otomatis (Fade Animation setiap 4 detik)
+            const slides = document.querySelectorAll('.gallery-slide');
+            if (slides.length > 0) {
+                let currentSlide = 0;
+                setInterval(() => {
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                }, 4000);
             }
 
             // Ambil Nama Tamu dari URL (?to=Nama+Tamu)
@@ -245,6 +324,21 @@
                 mainContent.style.display = 'block';
                 AOS.refresh(); 
             }, 1000);
+        }
+
+        // Fungsi Salin Rekening otomatis
+        function copyToClipboard(text, btnElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btnElement.textContent;
+                btnElement.textContent = "✔ Berhasil Disalin!";
+                btnElement.classList.add('bg-white', 'text-black');
+                setTimeout(() => {
+                    btnElement.textContent = originalText;
+                    btnElement.classList.remove('bg-white', 'text-black');
+                }, 2000);
+            }).catch(err => {
+                console.error('Gagal menyalin: ', err);
+            });
         }
 
         function loadWishesFromSheet() {
@@ -345,4 +439,3 @@
     </script>
 </body>
 </html>
-
